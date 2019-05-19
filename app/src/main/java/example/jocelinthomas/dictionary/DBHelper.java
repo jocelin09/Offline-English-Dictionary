@@ -13,7 +13,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 /**
- * Created by jocelinthomas on 14/05/19.
+ * Created by jocelinthomas on 14/05/material.
  */
 
 public class DBHelper extends SQLiteOpenHelper {
@@ -32,21 +32,27 @@ public class DBHelper extends SQLiteOpenHelper {
         this.context = context;
         this.DB_Path = "/data/data/" + context.getPackageName()+"/"+"databases/";
         Log.e("DB_Path::",DB_Path);
+        System.out.println();
 
     }
 
     //method to call checkDatabse
     public void createDB() throws IOException
     {
-        boolean dbExists = checkDatabse();
-        if (!dbExists) // db doesn't exists
-        {
-            this.getReadableDatabase();
-            try {
-                copyDBtoPath();
-            } catch (IOException e) {
-                throw new Error("Error whilecopying DB");
+        try {
+            boolean dbExists = checkDatabse();
+            if (!dbExists) // db doesn't exists
+            {
+                this.getReadableDatabase();
+                try {
+                    copyDBtoPath();
+                } catch (IOException e) {
+                    throw new Error("Error whilecopying DB");
+                }
             }
+        } catch (Error error) {
+            error.printStackTrace();
+
         }
     }
     //check if DB already exists or not
@@ -70,7 +76,9 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
 
-    private void copyDBtoPath() throws IOException{
+    private void copyDBtoPath() throws IOException
+    {
+
         InputStream inputStream = context.getAssets().open(DB_Name);
         String outputFilename = DB_Path + DB_Name;
         OutputStream outputStream = new FileOutputStream(outputFilename);
@@ -150,4 +158,5 @@ public class DBHelper extends SQLiteOpenHelper {
         }
 
     }
+
 }

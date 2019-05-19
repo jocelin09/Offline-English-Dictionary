@@ -18,20 +18,26 @@
 
     <!--Collapsingtoolbar-->
     <style name="ExpandedTitleText" parent="@android:style/TextAppearance">
-        <item name="android:textSize">25sp</item>
+        <item name="android:textSize">22sp</item>
+        <item name="android:background">@android:color/transparent</item>
+
     </style>
 
     <!--Tabs-->
-    <style name="TabStyle" parent="TextAppearance.AppCompat.Button">
-        <item name="android:textColor">#fff</item>
-        <item name="android:textSize">16sp</item>
-        <item name="android:textAllCaps">false</item>
+    <style name="TabStyle" parent="Base.Widget.Design.TabLayout">
+        <item name="tabTextAppearance">@style/MyTabTextAppearance</item>
     </style>
+
+    <style name="MyTabTextAppearance" parent="TextAppearance.AppCompat.Button">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="textAllCaps">true</item>
+    </style>
+
 
     <!--AlertDialog-->
     <style name="MyDialogAlert" parent="Theme.AppCompat.Light.Dialog.Alert">
         <item name="colorAccent">@color/colorPrimary</item>
-
     </style>
 
 </resources>

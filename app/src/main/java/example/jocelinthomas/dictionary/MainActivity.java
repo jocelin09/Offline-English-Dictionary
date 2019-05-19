@@ -20,6 +20,10 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -43,10 +47,21 @@ public class MainActivity extends AppCompatActivity {
 
     boolean doubleTapToExit = false;
 
+    private AdView mAdView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // Sample AdMob app ID: ca-app-pub-3940256099942544~3347511713
+      //  MobileAds.initialize(this, getString(R.string.ADMOB_ADD_ID));
+
+        mAdView = findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().addTestDevice(AdRequest.DEVICE_ID_EMULATOR).build();
+
+        mAdView.loadAd(adRequest);
+
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -172,7 +187,7 @@ public class MainActivity extends AppCompatActivity {
         layoutManager = new LinearLayoutManager(MainActivity.this);
         recyclerView.setLayoutManager(layoutManager);
 
-        fetchHistory();
+       fetchHistory();
 
 
     }
@@ -198,6 +213,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void fetchHistory() {
+
         historyArrayList = new ArrayList<>();
         adapter = new HistoryAdapter(this, historyArrayList);
         recyclerView.setAdapter(adapter);
@@ -230,7 +246,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        fetchHistory();
+        try {
+            fetchHistory();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static void openDatabase() {
@@ -253,11 +273,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+
             case R.id.settings:
                 startActivity(new Intent(MainActivity.this, SettingsActivity.class));
-                return true;
-
-            case R.id.share:
                 return true;
 
             case R.id.exit:

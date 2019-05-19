@@ -55,10 +55,10 @@
             android:foreground="?selectableItemBackground">
 
             <TextView
-                android:id="@+id/about"
+                android:id="@+id/shareapp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="About"
+                android:text="Share App"
                 android:padding="15dp"
                 android:textSize="16sp"
                 android:textStyle="bold"/>

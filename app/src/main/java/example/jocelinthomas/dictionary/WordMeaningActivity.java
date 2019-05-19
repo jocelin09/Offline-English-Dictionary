@@ -3,8 +3,10 @@ package example.jocelinthomas.dictionary;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.SQLException;
+import android.os.Build;
 import android.speech.tts.TextToSpeech;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -30,7 +32,7 @@ import example.jocelinthomas.dictionary.fragments.DefinitionFragment;
 import example.jocelinthomas.dictionary.fragments.ExamplesFragment;
 import example.jocelinthomas.dictionary.fragments.SynonymsFragment;
 
-public class WordMeaningActivity extends AppCompatActivity {
+public class WordMeaningActivity extends AppCompatActivity{
 
     private ViewPager viewPager;
     String enword;
@@ -43,12 +45,11 @@ public class WordMeaningActivity extends AppCompatActivity {
     public String example;
 
     TextToSpeech textToSpeech;
-
+    FloatingActionButton fab;
     boolean startFromSharedText = false;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_word_meaning);
 
@@ -56,6 +57,9 @@ public class WordMeaningActivity extends AppCompatActivity {
         Bundle bundle = getIntent().getExtras();
         enword = bundle.getString("en_word");
 
+        fab = (FloatingActionButton) findViewById(R.id.fab);
+
+        //textToSpeech  =  new TextToSpeech(this,this);
 
         Intent intent = getIntent();
         String action = intent.getAction();
@@ -100,7 +104,19 @@ public class WordMeaningActivity extends AppCompatActivity {
         }
 
 
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+                sharingIntent.setType("text/plain");
+                String shareBody = "Word: "+enword+"\nDefinition: "+definition;
+                sharingIntent.putExtra(Intent.EXTRA_SUBJECT, enword);
+                sharingIntent.putExtra(Intent.EXTRA_TEXT, shareBody);
+                startActivity(Intent.createChooser(sharingIntent, "Share via"));
+            }
+        });
         ImageButton btnSpeak = (ImageButton) findViewById(R.id.btnSpeak);
+
         btnSpeak.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -110,25 +126,44 @@ public class WordMeaningActivity extends AppCompatActivity {
 
                         if (status == TextToSpeech.SUCCESS) {
                             int result = textToSpeech.setLanguage(Locale.getDefault());
-                            if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+
+                            if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED)
+                            {
                                 Toast.makeText(WordMeaningActivity.this, "This language is not supported", Toast.LENGTH_SHORT).show();
-                            } else {
-                                textToSpeech.speak(enword, TextToSpeech.QUEUE_FLUSH, null);
+                            }
+                            else
+                            {
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+                                {
+                                    textToSpeech.speak(enword, TextToSpeech.QUEUE_FLUSH, null,null);
+                                }
+                                else
+                                {
+                                    Toast.makeText(WordMeaningActivity.this, "Speech is not supported ", Toast.LENGTH_SHORT).show();
+                                }
                             }
 
-                        } else {
+                        }
+                        else
+                            {
                             Toast.makeText(WordMeaningActivity.this, "Initialization failed", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
+
+
+
+                //speakWord();
             }
         });
+
+
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.mToolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(enword);
 
-        toolbar.setNavigationIcon(R.drawable.ic_back);
+        toolbar.setNavigationIcon(R.drawable.ic_btnback);
 
         viewPager = (ViewPager) findViewById(R.id.viewPager);
         if (viewPager != null) {
@@ -194,7 +229,7 @@ public class WordMeaningActivity extends AppCompatActivity {
         viewPagerAdapter.addFrag(new DefinitionFragment(), "Definition");
         viewPagerAdapter.addFrag(new SynonymsFragment(), "Synonyms");
         viewPagerAdapter.addFrag(new AntonymsFragment(), "Antonyms");
-        viewPagerAdapter.addFrag(new ExamplesFragment(), "Example");
+        viewPagerAdapter.addFrag(new ExamplesFragment(), "Examples");
         viewPager.setAdapter(viewPagerAdapter);
 
     }
@@ -228,6 +263,24 @@ public class WordMeaningActivity extends AppCompatActivity {
             super.onBackPressed();
         }
     }
+    public void onPause(){
+        if(textToSpeech !=null){
+            textToSpeech.stop();
+            textToSpeech.shutdown();
+        }
+        super.onPause();
+    }
+
+
+    @Override
+    public void onDestroy() {
+        if (textToSpeech != null) {
+            textToSpeech.stop();
+            textToSpeech.shutdown();
+        }
+        super.onDestroy();
+    }
+
 
 
 }

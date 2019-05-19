@@ -27,7 +27,7 @@ public class LoadDataAsync extends AsyncTask<Void, Void, Boolean> {
         LayoutInflater layoutInflater = LayoutInflater.from(context);
         View dialogView = layoutInflater.inflate(R.layout.alertdialog, null);
 
-        alertDialogBuilder.setTitle("Loading Database").setView(dialogView);
+        alertDialogBuilder.setTitle("Loading Words..").setView(dialogView);
         alertDialog = alertDialogBuilder.create();
         alertDialog.setCancelable(false);
         alertDialog.show();
@@ -41,6 +41,7 @@ public class LoadDataAsync extends AsyncTask<Void, Void, Boolean> {
             dbHelper.createDB();
         } catch (IOException e) {
             e.printStackTrace();
+            System.out.println("error doinbackground" +e);
             throw new Error("Database was not created");
         }
         dbHelper.close();
