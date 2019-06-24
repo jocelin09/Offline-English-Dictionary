@@ -37,7 +37,7 @@ public class SettingsActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Settings");
 
-        toolbar.setNavigationIcon(R.drawable.ic_btnback);
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
 
         TextView clear_history = (TextView) findViewById(R.id.clear_history);
         TextView shareapp = (TextView) findViewById(R.id.shareapp);
@@ -70,8 +70,8 @@ public class SettingsActivity extends AppCompatActivity {
 
                     Intent shareIntent = new Intent(Intent.ACTION_SEND);
                     shareIntent.setType("text/plain");
-                    shareIntent.putExtra(Intent.EXTRA_SUBJECT, "English Dictionary");
-                    String shareMessage = "Let me recommend you this application\n\n";
+                    shareIntent.putExtra(Intent.EXTRA_SUBJECT, "English Dictionary - Offline");
+                    String shareMessage = "Let me recommend you this free and offline Dictionary application\n\n";
                     shareMessage = shareMessage + "https://play.google.com/store/apps/details?id=" + BuildConfig.APPLICATION_ID + "\n";
                     shareIntent.putExtra(Intent.EXTRA_TEXT, shareMessage);
                     startActivity(Intent.createChooser(shareIntent, "Choose one"));
@@ -102,16 +102,16 @@ public class SettingsActivity extends AppCompatActivity {
     private void showAlert() {
 
         try {
-            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this, R.style.MyDialogAlert);
             alertDialogBuilder.setTitle("Are you sure?")
-                    .setMessage("All the history will be deleted")
-                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    .setMessage("All history data will be deleted")
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             dbHelper.deleteHistory();
-                            Toast.makeText(SettingsActivity.this, "History deleted!!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SettingsActivity.this, "Deleted successfully", Toast.LENGTH_SHORT).show();
 
                         }
-                    }).setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    }).setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
                 }
             }).show();

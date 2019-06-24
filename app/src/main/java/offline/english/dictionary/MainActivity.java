@@ -1,8 +1,12 @@
 package offline.english.dictionary;
 
+import android.Manifest;
+import android.app.ActivityManager;
 import android.app.AlertDialog;
+import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.os.Bundle;
@@ -21,9 +25,6 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.MobileAds;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.text.SimpleDateFormat;
@@ -31,6 +32,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -50,32 +52,22 @@ public class MainActivity extends AppCompatActivity {
     Cursor cursorHistory;
 
     boolean doubleTapToExit = false;
-
-    private AdView mAdView;
-
-
+    
     //FirebaseAnalytics
     private FirebaseAnalytics mFirebaseAnalytics;
+    
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+    
+        dbHelper = new DBHelper(getApplicationContext());
 
         // Obtain the FirebaseAnalytics instance.
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
-
-        // Sample AdMob app ID: ca-app-pub-3940256099942544~3347511713
-        MobileAds.initialize(this, getString(R.string.banner_app_id));
-
-
-        mAdView = (AdView) findViewById(R.id.adView);
-        //AdRequest adRequest = new AdRequest.Builder().build(); //live
-        AdRequest adRequest = new AdRequest.Builder().addTestDevice("33BE2250B43518CCDA7DE426D04EE231").build(); //test
-        mAdView.loadAd(adRequest);
-
-
+        
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -90,23 +82,26 @@ public class MainActivity extends AppCompatActivity {
                 searchView.setIconified(false);
             }
         });
-
-
-        dbHelper = new DBHelper(this);
+        
 
         try {
-            if (dbHelper.checkDatabse()) {
+            if (dbHelper.checkDatabase())
+            {
                 openDatabase();
-            } else {
+            }
+            else
+            {
                 //DB doesn't exists
                 LoadDataAsync loadDataAsync = new LoadDataAsync(MainActivity.this);
                 loadDataAsync.execute();
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Crashlytics.logException(e);
+            System.out.println("Exception main:110:" +e);
+           Crashlytics.logException(e);
         }
 
+        
         try {
             final String[] from = new String[]{"en_word"}; //same name as column name
             final int[] to = new int[]{R.id.suggestion_text};
@@ -122,8 +117,9 @@ public class MainActivity extends AppCompatActivity {
             searchView.setSuggestionsAdapter(simpleCursorAdapter);
         } catch (Exception e) {
             e.printStackTrace();
-            Crashlytics.logException(e);
-            
+           // System.out.println("Exception main:129 " +e);
+           Crashlytics.logException(e);
+           
         }
 
         searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
@@ -153,7 +149,8 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(intent);
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Crashlytics.logException(e);
+                    System.out.println("Exception main 161" +e);
+                   Crashlytics.logException(e);
                 }
 
                 return true;
@@ -171,14 +168,24 @@ public class MainActivity extends AppCompatActivity {
                     Matcher matcher = pattern.matcher(text);
 
                     if (matcher.matches()) {
-
-                        Cursor cursor = dbHelper.getMeaning(text);
+    
+                        Cursor cursor = null;
+                        try {
+                            cursor = dbHelper.getMeaning(text);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            System.out.println("e 186= " + e);
+                        }
                         //DB might or might not have the word entered by the user
-
+    
+                        System.out.println("cursor.getCount() = " + cursor.getCount());
+                        
                         if (cursor.getCount() == 0) //DB doesn't have the word entered by the user
                         {
                             showAlertDialog();
-                        } else {
+                        }
+                        else
+                        {
                             searchView.setQuery("", false);
                             searchView.clearFocus();
                             searchView.setFocusable(false);
@@ -195,7 +202,8 @@ public class MainActivity extends AppCompatActivity {
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Crashlytics.logException(e);
+                    System.out.println("Excepption main:206" +e);
+                   Crashlytics.logException(e);
                 }
 
                 return false;
@@ -209,14 +217,19 @@ public class MainActivity extends AppCompatActivity {
 
                     Pattern pattern = Pattern.compile("[A-Za-z \\-.]{1,25}");
                     Matcher matcher = pattern.matcher(newText);
-
-                    if (matcher.matches()) {
-                        Cursor c = dbHelper.getSuggestions(newText);
-                        simpleCursorAdapter.changeCursor(c); //shows suggestions whenever user enters new words
-                    }
+    
+                    System.out.println("newText:" +newText);
+                    if (matcher.matches())
+                        {
+                            Cursor c = dbHelper.getSuggestions(newText);
+                            simpleCursorAdapter.changeCursor(c); //shows suggestions whenever user enters new words
+                        }
+                   
+    
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Crashlytics.logException(e);
+                    System.out.println("Exception 219:::" +e);
+                   Crashlytics.logException(e);
                 }
 
                 return false;
@@ -250,32 +263,32 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void showAlertDialog() {
-        try {
-            searchView.setQuery("", false);
+        private void showAlertDialog() {
+                try {
+                    searchView.setQuery("", false);
+        
+                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this, R.style.MyDialogAlert);
+                    alertDialogBuilder.setTitle("Word not found.")
+                            .setMessage("Please search again")
+        
+                            .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+        
+        
+                                }
+                            })
+                            .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    searchView.clearFocus();
+                                }
+                            }).show();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                   Crashlytics.logException(e);
+                }
+            }
 
-            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this, R.style.MyDialogAlert);
-            alertDialogBuilder.setTitle("Word not found.")
-                    .setMessage("Please search again")
-
-                    .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-
-
-                        }
-                    })
-                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            searchView.clearFocus();
-                        }
-                    }).show();
-        } catch (Exception e) {
-            e.printStackTrace();
-            Crashlytics.logException(e);
-        }
-    }
-
-    private void fetchHistory() {
+        private void fetchHistory() {
 
         try {
             historyArrayList = new ArrayList<>();
@@ -312,7 +325,7 @@ public class MainActivity extends AppCompatActivity {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Crashlytics.logException(e);
+           Crashlytics.logException(e);
         }
 
     }
@@ -325,7 +338,7 @@ public class MainActivity extends AppCompatActivity {
             fetchHistory();
         } catch (Exception e) {
             e.printStackTrace();
-            Crashlytics.logException(e);
+           Crashlytics.logException(e);
         }
     }
 
@@ -335,7 +348,7 @@ public class MainActivity extends AppCompatActivity {
             databaseopened = true;
         } catch (SQLException e) {
             e.printStackTrace();
-            Crashlytics.logException(e);
+           Crashlytics.logException(e);
         }
 
     }
@@ -353,7 +366,7 @@ public class MainActivity extends AppCompatActivity {
 
             case R.id.settings:
                 startActivity(new Intent(MainActivity.this, SettingsActivity.class));
-              ///  Crashlytics.getInstance().crash(); // Force a crash
+             
                 return true;
 
         }

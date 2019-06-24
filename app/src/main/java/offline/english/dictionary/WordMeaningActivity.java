@@ -197,7 +197,7 @@ public class WordMeaningActivity extends AppCompatActivity{
         String word = enword.toUpperCase();
         getSupportActionBar().setTitle(word);
 
-        toolbar.setNavigationIcon(R.drawable.ic_btnback);
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
 
         viewPager = (ViewPager) findViewById(R.id.viewPager);
         if (viewPager != null) {

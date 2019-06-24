@@ -37,15 +37,16 @@ public class DefinitionFragment extends Fragment {
             String en_Definition = ((WordMeaningActivity)context).definition;
 
             String definitions = en_Definition.substring(0,1).toUpperCase() + en_Definition.substring(1).toLowerCase();
-            System.out.println("definitions::;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;" +definitions);
+           // System.out.println("definitions::;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;" +definitions);
 
 
             textViewD.setText(definitions);
 
-            if (en_Definition == null)
+            if (definitions == null)
             {
                 textViewD.setText("No definition found");
             }
+            
         } catch (Exception e) {
             e.printStackTrace();
             Crashlytics.logException(e);

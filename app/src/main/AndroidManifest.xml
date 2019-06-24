@@ -3,25 +3,18 @@
     package="offline.english.dictionary">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
     <application
-        android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher_11"
+        android:allowBackup="false"
+        android:fullBackupContent="false"
+        android:icon="@mipmap/ic_launcher_icon"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_11_round"
+        android:roundIcon="@mipmap/ic_launcher_icon_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <!-- Sample AdMob App ID: ca-app-pub-3940256099942544~3347511713 -->
-        <meta-data
-            android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-9925117394859997~7536809828"
-
-            />
-
-
-        <activity android:name="offline.english.dictionary.MainActivity">
+        <activity android:name="offline.english.dictionary.MainActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -29,7 +22,8 @@
         </activity>
 
         <activity android:name="offline.english.dictionary.WordMeaningActivity"
-            android:launchMode="singleTask">
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -37,7 +31,8 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="offline.english.dictionary.SettingsActivity"></activity>
+        <activity android:name="offline.english.dictionary.SettingsActivity"
+            android:screenOrientation="portrait"/>
 
     </application>
 

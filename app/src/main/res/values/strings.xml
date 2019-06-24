@@ -1,16 +1,16 @@
 <resources>
-    <string name="app_name">Dictionary</string>
+    <string name="app_name">English Dictionary - Offline</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="blankhistory">Words you searched most\n recently shows up here</string>
+    <string name="blankhistory">Words you searched \n recently shows up here</string>
 
     <!--live ID's-->
-   <!-- <string name="banner_ad_unit_id">ca-app-pub-9925117394859997/9899135314</string>
-    <string name="banner_app_id">ca-app-pub-9925117394859997~7536809828</string>-->
+    <string name="banner_ad_unit_id">ca-app-pub-9925117394859997/9899135314</string>
+    <string name="banner_app_id">ca-app-pub-9925117394859997~7536809828</string>
 
     <!--test ID's-->
-    <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
+ <!--   <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
     <string name="banner_app_id">ca-app-pub-3940256099942544~3347511713</string>-->
 
 

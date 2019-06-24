@@ -71,6 +71,7 @@ public class LoadDataAsync extends AsyncTask<Void, Void, Boolean> {
             MainActivity.openDatabase();
         } catch (Exception e) {
             e.printStackTrace();
+            System.out.println("openDatabase loadasync" +e);
             Crashlytics.logException(e);
         }
     }

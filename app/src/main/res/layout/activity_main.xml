@@ -5,7 +5,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:ads="http://schemas.android.com/apk/res-auto"
     tools:context="offline.english.dictionary.MainActivity">
 
    <android.support.design.widget.CoordinatorLayout
@@ -25,7 +24,7 @@
                 android:layout_height="?attr/actionBarSize"
                 android:background="?attr/colorPrimary"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-                app:title="Dictionary"/>
+                app:title="@string/app_name"/>
 
 
             <LinearLayout
@@ -43,7 +42,7 @@
                     android:clickable="true"
                     android:focusable="true"
                     app:queryHint="Type a word...."
-                    app:searchIcon="@drawable/ic_search"
+                    app:searchIcon="@drawable/ic_search_black_24dp"
                     app:theme="@style/SearchTextTheme">
 
                 </android.support.v7.widget.SearchView>
@@ -61,7 +60,7 @@
                 android:id="@+id/empty_history"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="150dp"
+                android:layout_marginTop="120dp"
                 android:gravity="center"
                 android:visibility="visible">
 
@@ -90,22 +89,7 @@
 
         </LinearLayout>
 
-
-
-
     </android.support.design.widget.CoordinatorLayout>
-
-    <com.google.android.gms.ads.AdView
-        android:id="@+id/adView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_alignParentBottom="true"
-        ads:adSize="BANNER"
-        ads:adUnitId="@string/banner_ad_unit_id">
-    </com.google.android.gms.ads.AdView>
-
-
 
 
 </RelativeLayout>
